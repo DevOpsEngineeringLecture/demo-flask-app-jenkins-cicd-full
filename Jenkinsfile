@@ -25,16 +25,14 @@ pipeline {
   
 
     stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    // Retrieve the secret text and write it to a temporary file
-                    withCredentials([string(credentialsId: 'my-kubeconfig-secret-id', variable: 'KUBECONFIG_CONTENT')]) {
-                        writeFile file: 'temp_kubeconfig', text: env.KUBECONFIG_CONTENT
-                        sh 'kubectl --kubeconfig=temp_kubeconfig apply -f deploy/deployment.yaml'
-                    }
-                }
-            }
+      steps {
+        script {
+          withCredentials([file(credentialsId: 'kubernetes-config-file', variable: 'KUBECONFIG')]) {
+                        sh 'kubectl apply -f deploy/deployment.yaml'
+          }
         }
+      }
+    }
 
   }
    post {
