@@ -25,9 +25,14 @@ pipeline {
   
 
     stage('Deploying to Kubernetes') {
+      environment {
+        KUBECONFIG_CONTENT = credentials('kubernetes-config-file')
+      }
       steps {
         script {
-          kubernetesDeploy(configs: "deployment.yaml", "service.yaml")
+          writeFile file: 'temp_kubeconfig', text: env.KUBECONFIG_CONTENT
+          sh 'KUBECONFIG=temp_kubeconfig kubectl apply -f deploy/deployment.yaml'
+          sh 'KUBECONFIG=temp_kubeconfig kubectl apply -f deploy/service.yaml'
         }
       }
     }
