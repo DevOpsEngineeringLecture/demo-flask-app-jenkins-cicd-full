@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: my-flask-app
-        image: gauss71248/demo-flask-app-jenkins:latest #The Docker image 
+        image: schlesi42/demo-flask-app-jenkins:latest #The Docker image 
         ports:
         - containerPort: 80
